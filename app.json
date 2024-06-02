@@ -20,7 +20,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "io.batyr.verbatim-ai"
+      "bundleIdentifier": "io.jpohlmann.verbatim-ai"
     },
     "android": {
       "adaptiveIcon": {

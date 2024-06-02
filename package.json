@@ -1,9 +1,9 @@
 {
-  "name": "expo-starter",
+  "name": "verbatim-ai",
   "version": "6.4.0",
-  "description": "Production-ready starter for Expo (React Native) App! Powered by cli-rn, React Navigation (v6), RN UI lib, Mobx, Reanimated 2, Dark Mode, Localization, and much more.",
-  "author": "Batyr <dev@batyr.io> (https://github.com/kanzitelli)",
-  "homepage": "https://github.com/kanzitelli/expo-starter",
+  "description": "Verabtim AI Audio Transcription.",
+  "author": "Justin Pohlmann <jpohlmann@gmail.com> (https://github.com/jpohlmann)",
+  "homepage": "https://github.com/jpohlmann/verbatim-app",
   "scripts": {
     "start": "npx expo start",
     "start:dc": "npx expo start --dev-client",
@@ -112,7 +112,7 @@
     "react-native-template",
     "expo",
     "expo-modules",
-    "expo-starter",
+    "verbatim-ai",
     "expo-template"
   ],
   "license": "MIT"

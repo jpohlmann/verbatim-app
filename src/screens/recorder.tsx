@@ -90,7 +90,11 @@ export const ThemedRecorderSheet = forwardRef(
     const scale = useSharedValue(1)
 
     const toggleRecording = async () => {
-      const permissionStatus = await Audio.getPermissionsAsync()
+      await Audio.requestPermissionsAsync();
+      console.log('getting permissions');
+      const permissionStatus = await Audio.getPermissionsAsync();
+      console.log('tried permissions');
+      console.log('permission status', permissionStatus.granted);
       if (!permissionStatus.granted) return
 
       if (isRecording) {
@@ -110,6 +114,7 @@ export const ThemedRecorderSheet = forwardRef(
       if (patient?.actor.id) {
         const uploadString = await api.upload.getUploadString(patient?.actor.id, auth.firm, auth.access_token);
         await api.upload.uploadToS3(uri, uploadString);
+        setUri('')
         toggleVisible(false);
       }
       console.log(uri)
@@ -133,10 +138,10 @@ export const ThemedRecorderSheet = forwardRef(
                 <Ionicons name="close" size={48} color="black" style={{paddingTop: '10%', alignSelf: 'flex-end'}} onPress={() => {toggleVisible(false)}} /> 
         <View style={{backgroundColor: 'white', height: '90%', paddingTop: '5%', paddingBottom: '10%'}} >
         <View style={{ padding: Spacing.md, marginBottom: Spacing.md }}>
-          <Text style={[$positionText, { color: positionColor ?? '#333333' }]}>
+          <Text style={[$positionText, { color: 'black' }]}>
             {appointment ? getFormattedTime(appointment.resource.start) : ''}
           </Text>
-          <Text style={[$positionText, { color: positionColor ?? '#333333' }]}>
+          <Text style={[$positionText, { color: 'black' }]}>
             {patient ? patient.actor.name : ''}
           </Text>
         </View>
@@ -172,14 +177,15 @@ export const ThemedRecorderSheet = forwardRef(
           onPositionChange={(pos: number) => setPosition(pos)}
         />
         <View style={{ padding: Spacing.md, marginTop: Spacing.xxl, marginBottom: Spacing.md }}>
-          <Text style={[$positionText, { color: positionColor ?? '#333333' }]}>
+          <Text style={[$positionText, { color: 'black' }]}>
             {formatTimer(Math.round(position / 100) * 100, true)}
           </Text>
         </View>
         <Row style={{justifyContent: "space-between", alignItems: "center", marginTop: Spacing.lg, marginBottom: Spacing.md}}>
           <View>
             <TouchableOpacity activeOpacity={0.5} style={$recordControl} onPress={resetRecording}>
-             <Ionicons name="refresh" size={Spacing.xl} style={{ color: iconColor }} />
+             <Ionicons name="refresh" size={Spacing.xl} style={{ color: '#1f62e0', alignSelf: 'center' }} />
+             <Text style={{ color: '#1f62e0' }}>Restart</Text>
             </TouchableOpacity>
           </View>
           <View style={{justifyContent: "center", alignItems: "center", marginHorizontal: Spacing.xxl}}>
@@ -193,8 +199,9 @@ export const ThemedRecorderSheet = forwardRef(
               <Ionicons
                 name='cloud-upload'
                 size={Spacing.xl}
-                style={{ color: uri == '' ? 'grey' : iconColor }}
+                style={{ color: uri == '' ? 'lightgrey' : '#1f62e0', alignSelf: 'center' }}
               />
+              <Text style={{ color: uri == '' ? 'lightgrey' : '#1f62e0' }}>Upload</Text>
             </TouchableOpacity>
           </View>
         </Row>
@@ -229,6 +236,8 @@ const $recordIndicator: ViewStyle = {
 
 const $recordControl: ViewStyle = {
   padding: Spacing.md,
+  alignContent: 'flex-end',
+  justifyContent: 'space-around'
 }
 
 const $positionText: TextStyle = {

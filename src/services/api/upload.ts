@@ -28,7 +28,7 @@ export class UploadApi {
           const fileStream = await fs.readFile(localFile, 'base64');
           const response = await axios.put(signedUrl, fileStream, {
             headers: {
-              'Content-Type': 'audio/mp4',
+              'Content-Type': 'audio/m4a',
               'Content-Transfer-Encoding': 'base64'
             },
           });
