@@ -42,12 +42,12 @@ const themes: Record<Appearance, ThemeColors> = {
 export const configureDesignSystem = async (): PVoid => {
   const {ui} = stores;
 
-  setColorsScheme(ui.appearance); // needed here
+  setColorsScheme('light'); // needed here
   if (ui.isAppearanceSystem) {
     Colors.loadColors(colors);
     Colors.loadSchemes(themes);
   } else {
-    Colors.loadColors({...colors, ...themes[ui.appearance]});
+    Colors.loadColors({...colors, ...themes['light']});
     Colors.loadSchemes({dark: {}, light: {}});
   }
 
@@ -165,14 +165,11 @@ export const getTabBarIcon =
     <Icon name={getTabIconName(tabName, focused)} size={size} color={color} />;
 
 const getTabIconName = (tabName: string, focused: boolean): IconName => {
-  if (tabName === 'MainTab') {
-    return focused ? 'home' : 'home-outline';
+  if (tabName === 'Appointment') {
+    return focused ? 'calendar-number' : 'calendar-number-outline';
   }
-  if (tabName === 'PlaygroundTab') {
-    return focused ? 'construct' : 'construct-outline';
-  }
-  if (tabName === 'SettingsTab') {
-    return focused ? 'settings' : 'settings-outline';
+  if (tabName === 'Logout') {
+    return focused ? 'log-out' : 'log-out-outline';
   }
 
   return 'list';

@@ -1,115 +1,129 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {ScrollView} from 'react-native';
-import {Text, View} from 'react-native-ui-lib';
-import Constants from 'expo-constants';
-import * as Application from 'expo-application';
-import {If} from '@kanzitelli/if-component';
+import React, {useEffect, useState} from 'react';
+import {ImageComponent, ScrollView, Button} from 'react-native';
+import {TextInput} from 'react-native-gesture-handler';
+import {View, Text, Colors, Image} from 'react-native-ui-lib';
 import {observer} from 'mobx-react';
 import {NavioScreen} from 'rn-navio';
 
-import {services, useServices} from '@app/services';
 import {useStores} from '@app/stores';
-import {Section} from '@app/components/section';
-import {BButton, HeaderButton} from '@app/components/button';
-import {Reanimated2} from '@app/components/reanimated2';
-import {Row} from '@app/components/row';
+import {useServices} from '@app/services';
 import {useAppearance} from '@app/utils/hooks';
-import {NavioSection} from '@app/components/sections/NavioSection';
+import {BButton} from '@app/components/button';
+import { AppointmentList } from './appointment-list';
+import { ThemedRecorderSheet } from './recorder';
 
-export const Main: NavioScreen = observer(({}) => {
-  useAppearance();
-  const {counter, ui} = useStores();
-  const {t, api, navio} = useServices();
-  const navigation = navio.useN();
+export type Props = {
+  type?: 'push';
+};
 
-  // State (local)
+export const Main: NavioScreen<Props> = observer(({type = 'push'}) => {
+
+  useAppearance(); // for Dark Mode
+  const {navio, api} = useServices();
+  const {auth} = useStores();
+
+  // State
   const [loading, setLoading] = useState(false);
-
-  // API Methods
-  const getCounterValue = useCallback(async () => {
-    setLoading(true);
-    try {
-      const {value} = await api.counter.get();
-
-      counter.set('value', value);
-    } catch (e) {
-      console.log('[ERROR]', e);
-    } finally {
-      setLoading(false);
-    }
-  }, [api.counter, counter]);
-
-  // Methods
-  const handleCounterDec = () => counter.set('value', counter.value - 1);
-  const handleCounterInc = () => counter.set('value', counter.value + 1);
-  const handleCounterReset = () => counter.set('value', 0);
+  const [password, setPassword] = useState('');
 
   // Start
   useEffect(() => {
     configureUI();
-    getCounterValue();
   }, []);
 
-  // UI Methods
-  const configureUI = () => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Row>
-          <HeaderButton onPress={handleCounterDec} label="Dec" />
-          <HeaderButton onPress={handleCounterInc} label="Inc" />
-        </Row>
-      ),
-    });
+  // API Methods
+  const login = async () => {
+    setLoading(true);
+
+    try {
+      const {status, data} = await api.auth.login(auth.username, password, auth.firm);
+
+      if (status === 'success') {
+        // marking that we are logged in
+        auth.set('state', 'logged-in');
+        if (data?.access_token) {
+          auth.set('access_token', data.access_token);
+          auth.set('refresh_token', data.refresh_token);
+        }
+        console.log('navigating here');
+        navio.setRoot('tabs', 'AppTabs');
+      }
+    } catch (e) {
+      // handle error
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Methods
+  const configureUI = () => {};
+
+  const setUsername = (v: string) => auth.set('username', v);
+  const setFirm = (v: string) => auth.set('firm', v);
   return (
     <View flex bg-bgColor>
+      <View style={{marginTop: '10%', width: '100%', alignItems: 'center' }} ><Image source={require('./splash_transparent.png')} /></View>
       <ScrollView contentInsetAdjustmentBehavior="always">
-        <NavioSection />
-
-        <Section title="Expo">
-          <Text text60R textColor>
-            Session ID: {Constants.sessionId}
-          </Text>
-          <Text text60R textColor>
-            App name: {Application.applicationName}
-          </Text>
-        </Section>
-
-        <Section title="Reanimated">
-          <Reanimated2 />
-        </Section>
-
-        <Section title="MobX">
-          <View centerV>
-            <Text marginB-s2 text60R textColor>
-              App launches: {ui.appLaunches}
-            </Text>
-
-            <Text marginB-s2 text60R textColor>
-              Counter:{' '}
-              <If
-                _={loading}
-                _then={<Text textColor>Loading...</Text>}
-                _else={<Text textColor>{counter.value}</Text>}
-              />
-            </Text>
-
-            <Row>
-              <BButton margin-s1 label=" - " onPress={handleCounterDec} />
-              <BButton margin-s1 label=" + " onPress={handleCounterInc} />
-              <BButton margin-s1 label="reset" onPress={handleCounterReset} />
-            </Row>
+        <View>
+          <View flex centerH marginT-30>
+            <Text text50>Login</Text>
           </View>
-        </Section>
 
-        <Section title="API">
-          <BButton margin-s1 label="Update counter value from API" onPress={getCounterValue} />
-        </Section>
+          <View marginT-s6 centerH>
+            <View
+              paddingH-s4
+              marginV-s10
+              style={{width: 300, borderWidth: 1, borderColor: Colors.grey50, borderRadius: 12}}
+            >
+              <View paddingH-s3 paddingV-s2 marginV-s4>
+                <TextInput
+                  placeholder={'Username'}
+                  value={auth.username}
+                  onChangeText={setUsername}
+                  inputMode="text"
+                />
+              </View>
+
+              <View centerH>
+                <View height={1} bg-grey50 style={{width: '100%'}} />
+              </View>
+
+              <View paddingH-s3 paddingV-s2 marginV-s4>
+                <TextInput
+                  placeholder={'Password'}
+                  value={password}
+                  onChangeText={setPassword}
+                  keyboardType="visible-password"
+                  secureTextEntry
+                />
+              </View>
+              <View centerH>
+                <View height={1} bg-grey50 style={{width: '100%'}} />
+              </View>
+
+              <View paddingH-s3 paddingV-s2 marginV-s4>
+                <TextInput
+                  placeholder={'Practice'}
+                  value={auth.firm}
+                  onChangeText={setFirm}
+                  inputMode="text"
+                />
+              </View>
+            </View>
+
+            <BButton label={loading ? 'Logging in ...' : 'Login'} onPress={login} />
+            <Button title="TESTING: Populate login" onPress={() => {
+              setFirm('ophthpmsandbox291');
+              setPassword('v5aQfEN0wM');
+              setUsername('fhir_oKtiu');
+            }} />
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
 });
-Main.options = () => ({
-  title: services.t.do('home.title'),
+Main.options = props => ({
+  title: `Auth flow`,
+  headerShown: false
 });

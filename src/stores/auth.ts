@@ -4,18 +4,22 @@ import {hydrateStore, makePersistable} from 'mobx-persist-store';
 type AuthState = 'logged-in' | 'logged-out';
 export class AuthStore implements IStore {
   state: AuthState = 'logged-out';
-  email = '';
-
+  username = '';
+  access_token = '';
+  refresh_token = '';
+  firm = '';
   // getters
   get stateStr() {
-    return this.state === 'logged-in' ? `Email: ${this.email}\nPress to logout` : 'Press to login';
+    return this.state === 'logged-in' ? `Username: ${this.username}\nPress to logout` : 'Press to login';
   }
 
   // methods
   logout() {
     this.setMany({
       state: 'logged-out',
-      email: '',
+      username: '',
+      access_token: '',
+      refresh_token: ''
     });
   }
 
@@ -24,7 +28,7 @@ export class AuthStore implements IStore {
 
     makePersistable(this, {
       name: AuthStore.name,
-      properties: ['email', 'state'],
+      properties: ['username', 'state'],
     });
   }
 

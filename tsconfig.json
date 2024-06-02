@@ -15,7 +15,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/*/index", "src/*"]
+      "@app/*": ["src/*/index", "src/*"],
+      "crypto": [
+        "node_modules/crypto-js"
+      ]
     }
   },
   "exclude": [

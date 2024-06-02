@@ -1,11 +1,7 @@
 import {Navio} from 'rn-navio';
 
 import {Main} from '@app/screens/main';
-import {Playground} from '@app/screens/playground';
-import {PlaygroundFlashList} from '@app/screens/playground/flash-list';
-import {PlaygroundExpoImage} from '@app/screens/playground/expo-image';
-import {Settings} from '@app/screens/settings';
-import {Example} from '@app/screens/_screen-sample';
+import {AppointmentList} from '@app/screens/appointment-list';
 
 import {useAppearance} from '@app/utils/hooks';
 import {
@@ -14,152 +10,70 @@ import {
   getTabBarIcon,
   drawerScreenDefaultOptions,
 } from '@app/utils/designSystem';
-import {services} from '@app/services';
-import {AuthLogin} from './screens/auth/login';
 
 // NAVIO
 export const navio = Navio.build({
   screens: {
     Main,
-    Settings,
-    Example,
-
-    Playground,
-    PlaygroundFlashList,
-    PlaygroundExpoImage,
-
-    // for .pushStack example
-    ProductPage: {
-      component: Example,
-      options: {
-        headerShown: false,
-      },
-    },
-
-    // for auth flow
-    AuthLogin,
+    AppointmentList,
   },
   stacks: {
-    MainStack: ['Main', 'Example'],
-    ExampleStack: {
-      screens: ['Example'],
-      navigatorProps: {
-        screenListeners: {
-          focus: () => {},
-        },
-      },
-    },
-    PlaygroundStack: {
-      screens: ['Playground', 'PlaygroundFlashList', 'PlaygroundExpoImage'],
-    },
-
-    // for .pushStack example
-    ProductPageStack: {
-      screens: ['ProductPage'],
+    MainStack: {
+      screens: ['Main'],
       containerOptions: {
-        headerShown: true,
-        title: 'Product page',
+        headerShown: false,
+        title: 'Main',
       },
     },
-
-    // for auth flow
-    AuthFlow: ['AuthLogin', 'Example'],
+    AppointmentStack: {
+      screens: ['AppointmentList'],
+      containerOptions: {
+        title: 'Appointments',
+        headerShown: true
+      }
+    }
   },
   tabs: {
     // main 3 tabs
     AppTabs: {
       layout: {
-        MainTab: {
+        Appointment: {
+          stack: 'AppointmentStack',
+          options: () => ({
+            title: 'Appointments',
+            tabBarIcon: getTabBarIcon('Appointment'),
+          }),
+        },
+        Logout: {
           stack: 'MainStack',
           options: () => ({
-            title: 'Main',
-            tabBarIcon: getTabBarIcon('MainTab'),
-          }),
-        },
-        PlaygroundTab: {
-          stack: 'PlaygroundStack',
-          options: () => ({
-            title: 'Playground',
-            tabBarIcon: getTabBarIcon('PlaygroundTab'),
-          }),
-        },
-        SettingsTab: {
-          stack: ['Settings'],
-          options: () => ({
-            title: services.t.do('settings.title'),
-            tabBarIcon: getTabBarIcon('SettingsTab'),
-            tabBarBadge: 23,
+            title: 'Logout',
+            tabBarIcon: getTabBarIcon('Logout'),
           }),
         },
       },
     },
-
-    // tabs with drawer
-    // TabsWithDrawer: {
-    //   layout: {
-    //     MainTab: {
-    //       stack: 'MainStack',
-    //       options: () => ({
-    //         title: 'Main',
-    //         tabBarIcon: getTabBarIcon('MainTab'),
-    //       }),
-    //     },
-    //     PlaygroundTab: {
-    //       drawer: 'DrawerForTabs',
-    //       options: () => ({
-    //         title: 'Playground',
-    //         tabBarIcon: getTabBarIcon('PlaygroundTab'),
-    //       }),
-    //     },
-    //   },
-    // },
   },
   drawers: {
-    // main drawer
     AppDrawer: {
       layout: {
-        Main: {
+        Main:{
           stack: 'MainStack',
           options: {
-            drawerType: 'front',
-          },
+            drawerType: 'front'
+          }
         },
-        Example: {
-          stack: ['Example'],
-        },
-        Playground: {
-          stack: 'PlaygroundStack',
-        },
-        // Tabs: {
-        //   tabs: 'TabsWithDrawer',
-        // },
+        AppointmentList:{
+          stack: 'AppointmentStack',
+          tabs: 'AppTabs',
+          options: {
+            drawerType: 'front'
+          }
+        }
       },
     },
-
-    // drawer inside tabs
-    // DrawerForTabs: {
-    //   layout: {
-    //     FlashList: {
-    //       stack: ['PlaygroundFlashList'],
-    //       options: {
-    //         title: 'Flash List',
-    //         drawerPosition: 'right',
-    //       },
-    //     },
-    //     ExpoImage: {
-    //       stack: ['PlaygroundExpoImage'],
-    //       options: {
-    //         title: 'Expo Image',
-    //         drawerPosition: 'right',
-    //       },
-    //     },
-    //   },
-    // },
   },
-  modals: {
-    ExampleModal: {stack: 'ExampleStack'},
-  },
-  root: 'tabs.AppTabs',
+  root: 'stacks.MainStack',
   hooks: [useAppearance],
   defaultOptions: {
     stacks: {

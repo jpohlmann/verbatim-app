@@ -2,11 +2,9 @@ import React from 'react';
 
 import {getNavio} from '@app/navio';
 import {OnLaunchService} from './onLaunch';
-import {TranslateService} from './translate';
 import {ApiService} from './api';
 
 class Services {
-  t = new TranslateService();
   api = new ApiService();
   onLaunch = new OnLaunchService();
 

@@ -1,15 +1,21 @@
+import { AppointmentApi } from './appointment';
 import {AuthApi} from './auth';
-import {CounterApi} from './counter';
+import { PatientApi } from './patient';
+import { UploadApi } from './upload';
 
 export class ApiService implements IService {
   private inited = false;
 
-  counter: CounterApi;
   auth: AuthApi;
-
+  appointment: AppointmentApi;
+  patient: PatientApi;
+  upload: UploadApi;
+  
   constructor() {
-    this.counter = new CounterApi();
     this.auth = new AuthApi();
+    this.appointment = new AppointmentApi();
+    this.patient = new PatientApi();
+    this.upload = new UploadApi();
   }
 
   init = async (): PVoid => {
