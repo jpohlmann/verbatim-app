@@ -8,9 +8,7 @@ export class OnLaunchService implements IService {
   init = async (): PVoid => {
     if (!this.inited) {
       this.incAppLaunches();
-
       await this.loadAssets();
-
       this.inited = true;
     }
   };
@@ -18,9 +16,14 @@ export class OnLaunchService implements IService {
   private loadAssets = async () => {
     const fonts = [IconComponent.font];
 
-    const fontAssets = fonts.map(font => Font.loadAsync(font));
-
-    await Promise.all([...fontAssets]);
+    const fontAssets = fonts.map(font => {
+      return Font.loadAsync(font)
+    });
+    try {
+      await Promise.all([...fontAssets]);
+    } catch(e) {
+      console.log(e)
+    }
   };
 
   private incAppLaunches() {

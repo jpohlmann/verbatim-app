@@ -23,6 +23,7 @@ export const AppointmentList: NavioScreen<Props> = observer(() => {
   const navigation = navio.useN();
   const appointmentApi = new AppointmentApi();
   const [appointments, setAppointments] = useState<Array<Entry>>([]);
+  const [recordingFinished, setRecordingFinished] = useState<boolean>(false);
   const [recorderVisible, setRecorderVisible] = useState<boolean>(false);
   const [appointment, setAppointment] = useState<Entry|undefined>(undefined);
   useEffect(() => {
@@ -55,12 +56,13 @@ export const AppointmentList: NavioScreen<Props> = observer(() => {
 
   return (
     <View flex bg-bgColor>
-      <ThemedRecorderSheet appointment={appointment} visible={recorderVisible} toggleVisible={setRecorderVisible} />
-      <View style={{marginTop: '10%', width: '100%', alignItems: 'center', marginBottom: '10%' }} ><Image source={require('./splash_transparent.png')} /></View>
+      <ThemedRecorderSheet uploadFinished={() => { setRecordingFinished(true) }} appointment={appointment} visible={recorderVisible} toggleVisible={setRecorderVisible} />
+      <View style={{marginTop: '5%', width: '100%', alignItems: 'center', marginBottom: '10%' }} ><Image source={require('./splash_transparent.png')} /></View>
+      <Text style={{display: recordingFinished ? 'flex' : 'none'}} center={true} color={'green'}>Recording Uploaded</Text>
       <FlashList
         contentInsetAdjustmentBehavior="always"
         data={appointments}
-        renderItem={({item}) => <ListItem item={item} setAppointment={setAppointment} setRecorderVisible={setRecorderVisible} />}
+        renderItem={({item}) => <ListItem item={item} setAppointment={setAppointment} setRecorderVisible={setRecorderVisible} setRecordingFinished={setRecordingFinished} />}
         estimatedItemSize={300}
       />
     </View>
@@ -77,7 +79,7 @@ const listStyles = {
   width: 400,
 }
 };
-const ListItem = ({item, setAppointment, setRecorderVisible}: {item: Entry, setAppointment: (item: Entry) => void, setRecorderVisible: (visible: boolean) => void}) => {
+const ListItem = ({item, setAppointment, setRecorderVisible, setRecordingFinished}: {item: Entry, setAppointment: (item: Entry) => void, setRecorderVisible: (visible: boolean) => void, setRecordingFinished: (finished: boolean) => void}) => {
   useAppearance();
   const patient = item.resource.participant.find(participant => participant.actor && participant.actor.reference.includes('Patient'));
   return (
@@ -93,6 +95,7 @@ const ListItem = ({item, setAppointment, setRecorderVisible}: {item: Entry, setA
             {getFormattedDateTime(item.resource.start)}
           </Text>
           <Button size={Button.sizes.medium} label="Record" onPress={() => {
+            setRecordingFinished(false);
             setAppointment(item);
             setRecorderVisible(true);
           }} />

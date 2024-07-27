@@ -16,9 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/*/index", "src/*"],
-      "crypto": [
+      /*"crypto": [
         "node_modules/crypto-js"
-      ]
+      ]*/
     }
   },
   "exclude": [

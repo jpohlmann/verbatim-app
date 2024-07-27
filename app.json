@@ -2,7 +2,7 @@
   "expo": {
     "name": "Verbatim AI",
     "slug": "verbatim-ai",
-    "version": "1.0.1",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/7efb42fb-55eb-4409-8ff1-3a9ca1524459"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -21,9 +22,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "io.jpohlmann.verbatim-ai",
-      "buildNumber": "1.0.1",
+      "buildNumber": "1.0.4",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Verbatim needs to use the device microphone to record the session."
+        "NSMicrophoneUsageDescription": "Verbatim needs to use the device microphone to record the session.",
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "android": {
@@ -43,6 +47,9 @@
       "eas": {
         "projectId": "7efb42fb-55eb-4409-8ff1-3a9ca1524459"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
