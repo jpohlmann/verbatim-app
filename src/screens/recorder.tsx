@@ -178,6 +178,7 @@ export const ThemedRecorderSheet = forwardRef(
           }}
           onRecordStop={(uri, duration) => {
             scale.value = withSpring(1, SPRING_SHORT_CONFIG)
+            console.log('turning off recording')
             setIsRecording(false)
 
             // Use this uri. Yay! 🎉
