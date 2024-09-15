@@ -34,6 +34,7 @@ import { getFormattedTime } from '../utils/date'
 import { useStores } from '@app/stores'
 import { navio } from '@app/navio'
 import { useServices } from '@app/services'
+import { LoginSuccessData } from '@app/utils/types/api';
 
 const RECORD_BUTTON_SIZE = 60
 const RECORD_BUTTON_BACKGROUND_SIZE = RECORD_BUTTON_SIZE + Spacing.md
@@ -117,9 +118,9 @@ export const ThemedRecorderSheet = forwardRef(
     }
 
     const uploadFile = async () => {
-      if (patient?.actor.id) {
+      if (patient?.actor.id && appointment && auth.apiLogin !== null && auth.sessionLogin !== null) {
         setUploading(true);
-        const uploadString = await api.upload.getUploadString(patient?.actor.id, auth.firm, auth.access_token);
+        const uploadString = await api.upload.getUploadString(patient?.actor.id, auth as LoginSuccessData, appointment?.resource.id, auth.firm);
         await api.upload.uploadToS3(uri, uploadString);
         await FileSystem.deleteAsync(uri, { idempotent: true });
         setUploading(false);

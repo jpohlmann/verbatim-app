@@ -2,7 +2,7 @@
   "expo": {
     "name": "Verbatim AI",
     "slug": "verbatim-ai",
-    "version": "1.0.4",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -22,7 +22,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "io.jpohlmann.verbatim-ai",
-      "buildNumber": "1.0.4",
+      "buildNumber": "1.0.7",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Verbatim needs to use the device microphone to record the session.",
         "UIBackgroundModes": [

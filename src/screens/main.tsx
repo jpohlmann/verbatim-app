@@ -11,6 +11,8 @@ import {useAppearance} from '@app/utils/hooks';
 import {BButton} from '@app/components/button';
 import { AppointmentList } from './appointment-list';
 import { ThemedRecorderSheet } from './recorder';
+import { LoginSuccessData } from '@app/utils/types/api';
+import { isLoginSuccess } from '@app/services/api/auth';
 
 export type Props = {
   type?: 'push';
@@ -37,18 +39,19 @@ export const Main: NavioScreen<Props> = observer(({type = 'push'}) => {
 
     try {
       const {status, data} = await api.auth.login(auth.username, password, auth.firm);
-
-      if (status === 'success') {
+      console.log('login data', data);
+      console.log('is login data', isLoginSuccess(data));
+      console.log('status', status);
+      if (status === 'success' && isLoginSuccess(data)) {
+        console.log('setting login data');
         // marking that we are logged in
         auth.set('state', 'logged-in');
-        if (data?.access_token) {
-          auth.set('access_token', data.access_token);
-          auth.set('refresh_token', data.refresh_token);
-        }
-        console.log('navigating here');
+        auth.set('apiLogin', data.apiLogin);
+        auth.set('sessionLogin', data.sessionLogin);
         navio.setRoot('tabs', 'AppTabs');
       }
     } catch (e) {
+      console.log('ERROR', e);
       // handle error
     } finally {
       setLoading(false);
@@ -113,9 +116,9 @@ export const Main: NavioScreen<Props> = observer(({type = 'push'}) => {
 
             <BButton label={loading ? 'Logging in ...' : 'Login'} onPress={login} />
             <Button title="TESTING: Populate login" onPress={() => {
-              setFirm('ophthpmsandbox291');
-              setPassword('v5aQfEN0wM');
-              setUsername('fhir_oKtiu');
+              setFirm('verbatimaisandbox');
+              setPassword('Password1234');
+              setUsername('dcane');
             }} />
           </View>
         </View>

@@ -30,10 +30,12 @@ export const AppointmentList: NavioScreen<Props> = observer(() => {
   const [appointment, setAppointment] = useState<Entry|undefined>(undefined);
   useEffect(() => {
     (async () => {
-      if (!auth.access_token) {
+      if (!auth?.apiLogin?.access_token) {
+        console.log('API LOGIN NOT FOUND');
         navio.push('Main');
       } else {
-        const appointmentData = await appointmentApi.getAppointments(auth.firm, auth.access_token);
+        console.log('API LOGIN FOUND');
+        const appointmentData = await appointmentApi.getAppointments(auth.firm, auth.apiLogin.access_token);
         if (appointmentData) {
           setAppointments(appointmentData);
         }

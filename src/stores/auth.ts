@@ -1,3 +1,4 @@
+import { ApiLoginData, SessionLoginData } from '@app/utils/types/api';
 import {makeAutoObservable} from 'mobx';
 import {hydrateStore, makePersistable} from 'mobx-persist-store';
 
@@ -5,8 +6,8 @@ type AuthState = 'logged-in' | 'logged-out';
 export class AuthStore implements IStore {
   state: AuthState = 'logged-out';
   username = '';
-  access_token = '';
-  refresh_token = '';
+  apiLogin: ApiLoginData|null = null;
+  sessionLogin: SessionLoginData|null = null;
   firm = '';
   // getters
   get stateStr() {
@@ -18,8 +19,8 @@ export class AuthStore implements IStore {
     this.setMany({
       state: 'logged-out',
       username: '',
-      access_token: '',
-      refresh_token: ''
+      apiLogin: null,
+      sessionLogin: null
     });
   }
 
