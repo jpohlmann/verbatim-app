@@ -8,10 +8,8 @@ import {useAppearance} from '@app/utils/hooks';
 import {FlashList} from '@shopify/flash-list';
 import {Row} from '@app/components/row';
 
-import { AppointmentApi, AppointmentResource, Entry } from '@app/services/api/appointment';
+import { AppointmentApi, Entry } from '@app/services/api/appointment';
 import { getFormattedDateTime } from '@app/utils/date';
-
-import { ThemedRecorderSheet } from './recorder';
 
 import { useStores } from '@app/stores';
 import RecorderPause from './recorder-pause';

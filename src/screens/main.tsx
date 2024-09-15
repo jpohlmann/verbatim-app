@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ImageComponent, ScrollView, Button} from 'react-native';
+import {ScrollView, Button} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {View, Text, Colors, Image} from 'react-native-ui-lib';
 import {observer} from 'mobx-react';
@@ -9,9 +9,6 @@ import {useStores} from '@app/stores';
 import {useServices} from '@app/services';
 import {useAppearance} from '@app/utils/hooks';
 import {BButton} from '@app/components/button';
-import { AppointmentList } from './appointment-list';
-import { ThemedRecorderSheet } from './recorder';
-import { LoginSuccessData } from '@app/utils/types/api';
 import { isLoginSuccess } from '@app/services/api/auth';
 
 export type Props = {

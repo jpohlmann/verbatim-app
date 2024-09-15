@@ -5,7 +5,6 @@ import { LoginSuccessData } from '@app/utils/types/api';
 
 export class UploadApi {
     getUploadString = async (patientId: string, auth: LoginSuccessData, appointmentId: string, firmId: string): Promise<string> => {
-      console  
       const result = await axios.request(
             {
                 url: `https://${ApiDomain}/upload`,
