@@ -1,21 +1,24 @@
 import axios from 'axios';
 import {ApiDomain} from '@app/constants/Api';
 import fs from 'react-native-fs';
+import { LoginSuccessData } from '@app/utils/types/api';
 
 export class UploadApi {
-    getUploadString = async (patientId: string, firmId: string, accessToken: string): Promise<string> => {
-        const result = await axios.request(
+    getUploadString = async (patientId: string, auth: LoginSuccessData, appointmentId: string, firmId: string): Promise<string> => {
+      const result = await axios.request(
             {
                 url: `https://${ApiDomain}/upload`,
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`,
+                    'Authorization': `Bearer ${auth.apiLogin.access_token}`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 data: {
+                    auth,
                     firm_id: firmId,
-                    patient_id: patientId
+                    patient_id: patientId,
+                    appointment_id: appointmentId
                 }
               }
           );

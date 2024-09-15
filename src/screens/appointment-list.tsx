@@ -8,17 +8,17 @@ import {useAppearance} from '@app/utils/hooks';
 import {FlashList} from '@shopify/flash-list';
 import {Row} from '@app/components/row';
 
-import { AppointmentApi, AppointmentResource, Entry } from '@app/services/api/appointment';
+import { AppointmentApi, Entry } from '@app/services/api/appointment';
 import { getFormattedDateTime } from '@app/utils/date';
 
-import { ThemedRecorderSheet } from './recorder';
 import { useStores } from '@app/stores';
+import RecorderPause from './recorder-pause';
 
 export type Props = {};
 export const AppointmentList: NavioScreen<Props> = observer(() => {
   useAppearance(); // for Dark Mode
   // const {ui} = useStores();
-  const {navio} = useServices();
+  const {navio, api} = useServices();
   const {auth} = useStores();
   const navigation = navio.useN();
   const appointmentApi = new AppointmentApi();
@@ -28,10 +28,12 @@ export const AppointmentList: NavioScreen<Props> = observer(() => {
   const [appointment, setAppointment] = useState<Entry|undefined>(undefined);
   useEffect(() => {
     (async () => {
-      if (!auth.access_token) {
+      if (!auth?.apiLogin?.access_token) {
+        console.log('API LOGIN NOT FOUND');
         navio.push('Main');
       } else {
-        const appointmentData = await appointmentApi.getAppointments(auth.firm, auth.access_token);
+        console.log('API LOGIN FOUND');
+        const appointmentData = await appointmentApi.getAppointments(auth.firm, auth.apiLogin.access_token);
         if (appointmentData) {
           setAppointments(appointmentData);
         }
@@ -53,10 +55,10 @@ export const AppointmentList: NavioScreen<Props> = observer(() => {
   };
 
   // UI Methods
-
+//      <ThemedRecorderSheet uploadFinished={() => { setRecordingFinished(true) }} appointment={appointment} visible={recorderVisible} toggleVisible={setRecorderVisible} />
   return (
     <View flex bg-bgColor>
-      <ThemedRecorderSheet uploadFinished={() => { setRecordingFinished(true) }} appointment={appointment} visible={recorderVisible} toggleVisible={setRecorderVisible} />
+      <RecorderPause uploadFinished={() => { setRecordingFinished(true) }} appointment={appointment} visible={recorderVisible} toggleVisible={setRecorderVisible} />
       <View style={{marginTop: '5%', width: '100%', alignItems: 'center', marginBottom: '10%' }} ><Image source={require('./splash_transparent.png')} /></View>
       <Text style={{display: recordingFinished ? 'flex' : 'none'}} center={true} color={'green'}>Recording Uploaded</Text>
       <FlashList
